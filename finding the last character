@@ -1,0 +1,4 @@
+dp=[[-1]*26 for i in range(len(st))]
+for i in range(len(st)):
+    for j in range(i,len(st)):
+        dp[i][ord(st[j])-ord('a')]=j
