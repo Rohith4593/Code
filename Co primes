@@ -1,0 +1,37 @@
+class Solution:
+    def getCoprimes(self, nums: List[int], edges: List[List[int]]) -> List[int]:
+        """
+        whats the root dude? i'm just gonna experiment to find out. the q
+        says its zero lol ok. so basically i just keep going to zero, and the node
+        with the smallest distance to my start who has gcd of 1 is the answer
+        sounds like brute force tho...
+        """
+        n = len(nums)
+        graph = [[] for _ in range(n)]
+        for u, v in edges:
+            graph[u].append(v)
+            graph[v].append(u)
+        
+        ancestors = defaultdict(int)
+        q = deque([(0, -1)])
+        while q:
+            size = len(q)
+            for _ in range(size):
+                node, ancestor = q.popleft()
+                ancestors[node] = ancestor
+
+                for nei in graph[node]:
+                    if nei != ancestor:
+                        q.append((nei, node))
+
+        @cache
+        def findCoprime(node, val):
+            if node == -1:
+                return -1
+            
+            ancestor = ancestors[node]
+            if gcd(val, nums[ancestor]) == 1:
+                return ancestor
+            return findCoprime(ancestor, val)
+
+        return [findCoprime(node, nums[node]) for node in range(n)]
